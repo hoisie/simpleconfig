@@ -1,12 +1,10 @@
 ## Description 
 
-Simpleconfig lets you add a simple configuration system to a Go project. It can read configuration from a source (a file, string, or io.Reader), and let you write it to an arbitrary struct or map.
+Simpleconfig lets you add a configuration system to a Go project. It can read configuration from different sources (a file, string, or io.Reader), and let you write it to an arbitrary struct or map.
 
-The simpleconfig is about as primitive as you can make it. It ignores lines that are blank or start with the pound sign `#`. Otherwise, it expects lines to have the format `key value`, where key and value are strings separated by a blank space. 
+The simpleconfig format is about as primitive as you can make it. It ignores lines that are blank or start with the pound sign `#`. Otherwise, it expects lines to have the format `key value`, where key and value are strings separated by a blank space. 
 
-simpleconfig has two methods: 
-
-As an example, see [redis.conf](https://github.com/antirez/redis/blob/master/redis.conf)
+As an example of a configuration file, see [redis.conf](https://github.com/antirez/redis/blob/master/redis.conf)
 
 ## Installation
 
@@ -18,10 +16,10 @@ Simpleconfig is a go package, so it can be installed with:
 
 ## Usage
 
-Simpleconfig has two methods
+Simpleconfig has two methods:
 
-    Read(source interface{}) (map[string]string, os.Error)
-    Unmarshal(dst interface{}, source interface{}) os.Error
+    func Read(source interface{}) (map[string]string, os.Error)
+    func Unmarshal(dst interface{}, source interface{}) os.Error
 
 The first method takes a source (either a string, or an io.Reader), and returns a map[string]string with the configuration. If the source argument is a string, it tries to open a file with the name, and if that fails, it treats the string itself as the configuration data.
 
