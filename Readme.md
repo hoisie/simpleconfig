@@ -1,6 +1,6 @@
 ## Description 
 
-Simpleconfig is a library that gives your Go project a flexible configuration mechanism  inspired by the configuration system for [Redis](http://github.com/antirez/redis). It can read config from different sources (a file, string, or io.Reader), and write it to an arbitrary struct or map.
+Simpleconfig is a library that gives your Go project a flexible configuration mechanism. It is inspired by the configuration system for [Redis](http://github.com/antirez/redis). It can read config from different sources (a file, string, or io.Reader), and write it to an arbitrary struct or map.
 
 The simpleconfig format is primitive -- it ignores lines that are blank or start with a pound sign `#`. Otherwise, it expects lines to have the format `key value`, where key and value are strings separated by a blank space. 
 
