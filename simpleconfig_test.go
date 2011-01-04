@@ -41,8 +41,8 @@ option7 19.01
 
 func TestBasic(t *testing.T) {
     var actual TestConfig
-
-    Unmarshal(&actual, testString)
+    config := ReadString(testString)
+    config.Unmarshal(&actual)
     if !reflect.DeepEqual(expected, actual) {
         t.Fatalf("Actual %v expected %v", actual, expected)
     }

@@ -10,7 +10,12 @@ import (
     "strings"
 )
 
-func read(r io.Reader) (map[string]string, os.Error) {
+type Config struct {
+    data map[string]string
+    err  os.Error
+}
+
+func read(r io.Reader) *Config {
     data := make(map[string]string)
     reader := bufio.NewReader(r)
     for {
@@ -34,31 +39,33 @@ func read(r io.Reader) (map[string]string, os.Error) {
         }
     }
 
-    return data, nil
+    var ret Config
+    ret.data = data
+    return &ret
 }
 
-func Read(source interface{}) (map[string]string, os.Error) {
-    if s, ok := source.(string); ok {
-        //is the string a filename? if so, try opening it
-        f, err := os.Open(s, os.O_RDONLY, 0666)
-        if err == nil {
-            //read config from the file
-            defer f.Close()
-            return read(f)
-        } else {
-            //read config from the string
-            buffer := bytes.NewBufferString(s)
-            return read(buffer)
-        }
-    }
-
-    if r, ok := source.(io.Reader); ok {
-        return read(r)
-    }
-
-    return nil, os.NewError("Invalid source type")
+func Read(reader io.Reader) *Config {
+    return read(reader)
 }
 
+func ReadFile(filename string) *Config {
+    var ret Config
+    f, err := os.Open(filename, os.O_RDONLY, 0666)
+    if err != nil {
+        ret.err = err
+        return &ret
+
+    }
+    //read config from the file
+    defer f.Close()
+    return read(f)
+}
+
+func ReadString(s string) *Config {
+    //read config from the string
+    buffer := bytes.NewBufferString(s)
+    return read(buffer)
+}
 
 func writeTo(s string, val reflect.Value) os.Error {
     switch v := val.(type) {
@@ -145,12 +152,18 @@ func writeToContainer(dst reflect.Value, data map[string]string) os.Error {
     return nil
 }
 
+func (c *Config) Get() (map[string]string, os.Error) {
+    if c.err != nil {
+        return nil, c.err
+    }
+    return c.data, nil
+}
 
-func Unmarshal(dst interface{}, src interface{}) os.Error {
-    data, err := Read(src)
-    if err != nil {
-        return err
+
+func (c *Config) Unmarshal(dst interface{}) os.Error {
+    if c.err != nil {
+        return c.err
     }
 
-    return writeToContainer(reflect.NewValue(dst), data)
+    return writeToContainer(reflect.NewValue(dst), c.data)
 }
