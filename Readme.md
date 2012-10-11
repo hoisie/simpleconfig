@@ -25,7 +25,7 @@ As an example of a configuration file, see [redis.conf](https://github.com/antir
 
 Simpleconfig is a go package, so it can be installed with:
 
- * `go install github.com/jijinggang/simpleconfig`
+ * `go get github.com/jijinggang/simpleconfig`
  * Clone the repo and run 'make install'
  * Or, just copy and paste simpleconfig.go into a new file in your project to avoid the dependency (but you won't get updates)
 
