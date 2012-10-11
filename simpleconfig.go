@@ -1,4 +1,4 @@
-package simpleconfig
+package config
 
 import (
 	"bufio"
@@ -41,10 +41,10 @@ func read(r io.Reader) *Config {
 			v := strings.Trim(line[pos+1:], " ")
 			data[k] = v
 		}
-		//		parts := strings.SplitN(line, "=", 2)
-		//		if len(parts) == 2 {
-		//			data[parts[0]] = parts[1]
-		//		}
+		//parts := strings.SplitN(line, " ", 2)
+		//if len(parts) == 2 {
+		//	data[parts[0]] = parts[1]
+		//}
 	}
 
 	var ret Config
