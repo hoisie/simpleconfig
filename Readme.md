@@ -1,6 +1,6 @@
 ## *Changes*
 
-I use .properties file format to replace hoisie's original config format. 
+I use .properties file format to replace hoisie's config format. This .properties format is more common, especially to Java developer. 
 
 now:
 
@@ -12,14 +12,20 @@ origin:
     host 192.168.0.1
     port 80
 
+I change public methods, so that is more simple to use
+
+    func Read(dst interface{}, src io.Reader) error
+	func ReadString(dst interface{}, src string) error
+	func ReadFile(dst interface{}, src string) error
+	
+I update these codes to go1 compatible 
 
 ## Description 
 
-Simpleconfig is a library that gives your Go project a flexible configuration mechanism. It is inspired by the configuration system for [Redis](http://github.com/antirez/redis). It can read config from different sources (a file, string, or io.Reader), and write it to an arbitrary struct or map.
+Simpleconfig is a library that gives your Go project a flexible configuration mechanism. It is inspired by the configuration system for properties. It can read config from different sources (a file, string, or io.Reader), and write it to an arbitrary struct or map.
 
-The simpleconfig format is primitive -- it ignores lines that are blank or start with a pound sign `#`. Otherwise, it expects lines to have the format `key value`, where key and value are strings separated by a blank space. 
+The simpleconfig format is primitive -- it ignores lines that are blank or start with a pound sign `#`. Otherwise, it expects lines to have the format `key value`, where key and value are strings separated by an equal mark (=), it's similar with .properties file' . 
 
-As an example of a configuration file, see [redis.conf](https://github.com/antirez/redis/blob/master/redis.conf)
 
 ## Installation
 
@@ -31,14 +37,13 @@ Simpleconfig is a go package, so it can be installed with:
 
 ## Usage
 
-Simpleconfig has two methods:
+Simpleconfig has three methods:
 
-    func Read(source interface{}) (map[string]string, os.Error)
-    func Unmarshal(dst interface{}, source interface{}) os.Error
+    func Read(dst interface{}, src io.Reader) error
+	func ReadString(dst interface{}, src string) error
+	func ReadFile(dst interface{}, src string) error
 
-The first method takes a `source` (either a string, or an io.Reader), and returns a `map[string]string` holding the configuration. If the source argument is a string, it tries to open a file by the name, and if that fails, it treats the string itself as the configuration data.
-
-The second method is more useful, it takes the configuration contained in `source` and tries to write it to the value represented by `dst`. For example, if you have a struct holding configuration variables, and a string with the values:
+The three methods are similar, only use different input source. it takes the configuration contained in `src` and tries to write it to the value represented by `dst`. For example, if you have a struct holding configuration variables, and a string with the values:
 
     type Config struct{
         Option1 string
@@ -57,4 +62,4 @@ The second method is more useful, it takes the configuration contained in `sourc
 You can write:
 
     var config Config
-    err := simpleconfig.Unmarshal(&config, configString)
+    err := simpleconfig.ReadString(&config, configString)

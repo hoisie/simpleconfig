@@ -1,7 +1,7 @@
 package simpleconfig
 
 import (
-    "reflect"
+	"reflect"
 	"testing"
 )
 
@@ -32,7 +32,7 @@ var testString = `
 
 option1 = /path/to/arbitrary/file
 option2 = true
-Option3 = 100
+ Option3 = 100
 Option4=-1
 Option5 =false
 option6= this has multiple values
@@ -41,8 +41,7 @@ option7 = 19.01
 
 func TestBasic(t *testing.T) {
 	var actual TestConfig
-	config := ReadString(testString)
-	config.Unmarshal(&actual)
+	ReadString(&actual, testString)
 	if !reflect.DeepEqual(expected, actual) {
 		t.Fatalf("Actual %v expected %v", actual, expected)
 	}

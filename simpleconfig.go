@@ -11,12 +11,7 @@ import (
 	"strings"
 )
 
-type Config struct {
-	data map[string]string
-	err  error
-}
-
-func read(r io.Reader) *Config {
+func read(dst interface{}, r io.Reader) error {
 	data := make(map[string]string)
 	reader := bufio.NewReader(r)
 	for {
@@ -46,33 +41,27 @@ func read(r io.Reader) *Config {
 		//	data[parts[0]] = parts[1]
 		//}
 	}
-
-	var ret Config
-	ret.data = data
-	return &ret
+	return unmarshal(dst, data)
 }
 
-func Read(reader io.Reader) *Config {
-	return read(reader)
+func Read(dst interface{}, reader io.Reader) error {
+	return read(dst, reader)
 }
 
-func ReadFile(filename string) *Config {
-	var ret Config
+func ReadFile(dst interface{}, filename string) error {
 	f, err := os.Open(filename)
 	if err != nil {
-		ret.err = err
-		return &ret
-
+		return err
 	}
 	//read config from the file
 	defer f.Close()
-	return read(f)
+	return read(dst, f)
 }
 
-func ReadString(s string) *Config {
+func ReadString(dst interface{}, s string) error {
 	//read config from the string
 	buffer := bytes.NewBufferString(s)
-	return read(buffer)
+	return read(dst, buffer)
 }
 
 func writeTo(s string, val reflect.Value) error {
@@ -160,17 +149,6 @@ func writeToContainer(dst reflect.Value, data map[string]string) error {
 	return nil
 }
 
-func (c *Config) Get() (map[string]string, error) {
-	if c.err != nil {
-		return nil, c.err
-	}
-	return c.data, nil
-}
-
-func (c *Config) Unmarshal(dst interface{}) error {
-	if c.err != nil {
-		return c.err
-	}
-
-	return writeToContainer(reflect.ValueOf(dst), c.data)
+func unmarshal(dst interface{}, data map[string]string) error {
+	return writeToContainer(reflect.ValueOf(dst), data)
 }
