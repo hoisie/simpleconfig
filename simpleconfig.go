@@ -33,10 +33,17 @@ func read(r io.Reader) *Config {
         if strings.HasPrefix(line, "#") {
             continue
         }
-        parts := strings.Split(line, " ", 2)
-        if len(parts) == 2 {
-            data[parts[0]] = parts[1]
-        }
+    	//config file is same with .properties file
+        pos := strings.Index(line, "=")
+        if pos > 0 {
+			k := strings.Trim(line[:pos], " ")
+			v := strings.Trim(line[pos+1:], " ")
+            data[k] = v
+		}
+        //parts := strings.Split(line, " ", 2)
+        //if len(parts) == 2 {
+        //   data[parts[0]] = parts[1]
+        //}
     }
 
     var ret Config
