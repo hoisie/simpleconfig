@@ -1,3 +1,18 @@
+## *Changes*
+
+I use .properties file format to replace hoisie's original config format. 
+
+now:
+
+    host = 192.168.0.1
+    port = 80
+
+origin:
+
+    host 192.168.0.1
+    port 80
+
+
 ## Description 
 
 Simpleconfig is a library that gives your Go project a flexible configuration mechanism. It is inspired by the configuration system for [Redis](http://github.com/antirez/redis). It can read config from different sources (a file, string, or io.Reader), and write it to an arbitrary struct or map.
@@ -10,7 +25,7 @@ As an example of a configuration file, see [redis.conf](https://github.com/antir
 
 Simpleconfig is a go package, so it can be installed with:
 
- * `goinstall github.com/hoisie/simpleconfig`
+ * `go install github.com/jijinggang/simpleconfig`
  * Clone the repo and run 'make install'
  * Or, just copy and paste simpleconfig.go into a new file in your project to avoid the dependency (but you won't get updates)
 
@@ -34,9 +49,9 @@ The second method is more useful, it takes the configuration contained in `sourc
     var configString = `
     #Sample configuration
     
-    option1 hello
-    option2 true
-    option3 101
+    option1 = hello
+    option2 = true
+    option3 = 101
     `
 
 You can write:
